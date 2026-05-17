@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gaming Vault | متجر ماين كرافت - اكس بوكس - ديسكورد</title>
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gaming-dark': '#0A0A0F',
+                        'gaming-card': '#111118',
+                        'gaming-neon': '#00FF88',
+                        'minecraft': '#44B37F',
+                        'xbox': '#107C10',
+                        'discord': '#5865F2',
+                        'whatsapp': '#25D366',
+                        'telegram': '#26A5E4',
+                        'instagram': '#E4405F',
+                        'facebook': '#1877F2',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Cairo:wght@300;400;500;600;700;800&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark {
+            background: linear-gradient(135deg, #0A0A0F 0%, #050508 100%);
+            color: white;
+        }
+        
+        body.light {
+            background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+            color: #1A1A2E;
+        }
+        
+        body.light .bg-gaming-card { background: #FFFFFF; }
+        body.light .bg-gaming-dark { background: #F0F0F0; }
+        body.light .game-card { background: white; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        body.light .stats-card { background: white; }
+        body.light .cart-sidebar { background: white; }
+        
+        .game-card {
+            background: linear-gradient(145deg, #111118, #0C0C12);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .minecraft-card:hover { box-shadow: 0 20px 40px rgba(68, 179, 127, 0.3); }
+        .xbox-card:hover { box-shadow: 0 20px 40px rgba(16, 124, 16, 0.3); }
+        .discord-card:hover { box-shadow: 0 20px 40px rgba(88, 101, 242, 0.3); }
+        
+        .btn-minecraft { background: linear-gradient(45deg, #44B37F, #2E8B57); }
+        .btn-xbox { background: linear-gradient(45deg, #107C10, #0A5C0A); }
+        .btn-discord { background: linear-gradient(45deg, #5865F2, #4752C4); }
+        
+        .btn-minecraft:hover, .btn-xbox:hover, .btn-discord:hover {
+            transform: scale(1.05);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #44B37F, #00FF88, #9B59B6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .stats-card {
+            background: rgba(17, 17, 24, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* سلة مشتريات جانبية جديدة */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            left: -400px;
+            width: 400px;
+            height: 100%;
+            background: #111118;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.open {
+            left: 0;
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .cart-overlay.active {
+            display: block;
+        }
+        
+        .cart-item {
+            background: rgba(68, 179, 127, 0.1);
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn.minus { background: rgba(255,68,68,0.2); color: #ff4444; }
+        .quantity-btn.plus { background: rgba(68,179,127,0.2); color: #44B37F; }
+        .quantity-btn:hover { transform: scale(1.1); }
+        
+        .social-icon {
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111118; }
+        ::-webkit-scrollbar-thumb { background: #44B37F; border-radius: 10px; }
+        
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        
+        @media (max-width: 500px) {
+            .cart-sidebar { width: 100%; left: -100%; }
+        }
+    </style>
+</head>
+<body class="dark">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-xl border-b border-minecraft/20">
+        <div class="container mx-auto px-5 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-cube text-3xl text-minecraft floating"></i>
+                    <div>
+                        <h1 class="text-2xl font-orbitron font-black"><span class="gradient-text">Gaming</span><span class="text-white">Vault</span></h1>
+                        <p class="text-xs text-gray-400">Minecraft • Xbox • Discord</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex gap-8 text-gray-300">
+                    <a href="#home" class="hover:text-minecraft transition">الرئيسية</a>
+                    <a href="#minecraft" class="hover:text-minecraft transition">ماين كرافت</a>
+                    <a href="#xbox" class="hover:text-xbox transition">اكس بوكس</a>
+                    <a href="#discord" class="hover:text-discord transition">ديسكورد</a>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-minecraft/20 hover:bg-minecraft/40 transition">
+                        <i id="themeIcon" class="fas fa-moon text-minecraft"></i>
+                    </button>
+                    <div class="relative cursor-pointer" id="openCartBtn">
+                        <i class="fas fa-shopping-cart text-2xl hover:text-minecraft transition"></i>
+                        <span id="cartCount" class="absolute -top-2 -right-3 bg-minecraft text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-[url('https://i.imgur.com/6ZPqV8a.png')] bg-cover bg-center opacity-10"></div>
+        <div class="container mx-auto px-5 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-minecraft/10 border border-minecraft/30 rounded-full px-5 py-2 mb-6">
+                <i class="fas fa-cube text-minecraft"></i>
+                <span class="text-minecraft text-sm font-bold">أكبر متجر ماين كرافت في العراق</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-orbitron font-black mb-6">
+                <span class="gradient-text">Minecraft</span>
+                <br>
+                <span class="text-white">Store Iraq</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-8">
+                كودات ماين كرافت، ريلم، كوينز، اكس بوكس، ديسكورد نيترو - أفضل الأسعار في العراق
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+                <div class="stats-card p-4"><i class="fas fa-users text-2xl text-minecraft mb-2"></i><h3 class="text-2xl font-bold">10K+</h3><p class="text-xs">عميل</p></div>
+                <div class="stats-card p-4"><i class="fas fa-bolt text-2xl text-minecraft mb-2"></i><h3 class="text-2xl font-bold">3 Sec</h3><p class="text-xs">توصيل</p></div>
+                <div class="stats-card p-4"><i class="fas fa-cube text-2xl text-minecraft mb-2"></i><h3 class="text-2xl font-bold">50+</h3><p class="text-xs">منتج</p></div>
+                <div class="stats-card p-4"><i class="fas fa-globe text-2xl text-minecraft mb-2"></i><h3 class="text-2xl font-bold">عالمي</h3><p class="text-xs">كودات</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= قسم ماين كرافت ============= -->
+    <section id="minecraft" class="py-20">
+        <div class="container mx-auto px-5">
+            <div class="text-center mb-12">
+                <i class="fas fa-cube text-4xl text-minecraft mb-3"></i>
+                <h2 class="text-4xl md:text-5xl font-orbitron font-bold"><span class="gradient-text">ماين كرافت</span> العراق</h2>
+                <p class="text-gray-400 mt-2">كودات رقمية فورية - جميع المنتجات عالمية</p>
+            </div>
+            
+            <div id="minecraftGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- منتجات ماين كرافت -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= قسم اكس بوكس ============= -->
+    <section id="xbox" class="py-20 bg-gaming-dark/30">
+        <div class="container mx-auto px-5">
+            <div class="text-center mb-12">
+                <i class="fab fa-xbox text-4xl text-xbox mb-3"></i>
+                <h2 class="text-4xl md:text-5xl font-orbitron font-bold"><span class="text-xbox">Xbox</span> Gift Cards</h2>
+                <p class="text-gray-400 mt-2">بطاقات اكس بوكس عالمية - من 5$ إلى 100$ (سعر الدولار = 2000 دينار)</p>
+            </div>
+            
+            <div id="xboxGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- بطاقات اكس بوكس -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= قسم ديسكورد ============= -->
+    <section id="discord" class="py-20">
+        <div class="container mx-auto px-5">
+            <div class="text-center mb-12">
+                <i class="fab fa-discord text-4xl text-discord mb-3"></i>
+                <h2 class="text-4xl md:text-5xl font-orbitron font-bold"><span class="text-discord">Discord</span> Nitro</h2>
+                <p class="text-gray-400 mt-2">اشتراكات ديسكورد نيترو بأسعار مميزة</p>
+            </div>
+            
+            <div id="discordGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- منتجات ديسكورد -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= تواصل معنا ============= -->
+    <section class="py-20 bg-gradient-to-r from-minecraft/10 to-discord/10">
+        <div class="container mx-auto px-5 text-center">
+            <i class="fas fa-headset text-4xl text-minecraft mb-4"></i>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">تواصل معنا</h2>
+            <p class="text-gray-400 mb-8">للطلب أو الاستفسار، تواصل معنا عبر حساباتنا الرسمية</p>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#" class="social-icon bg-whatsapp/20 hover:bg-whatsapp w-16 h-16 rounded-full flex items-center justify-center transition-all">
+                    <i class="fab fa-whatsapp text-3xl text-whatsapp"></i>
+                </a>
+                <a href="#" class="social-icon bg-telegram/20 hover:bg-telegram w-16 h-16 rounded-full flex items-center justify-center transition-all">
+                    <i class="fab fa-telegram text-3xl text-telegram"></i>
+                </a>
+                <a href="#" class="social-icon bg-instagram/20 hover:bg-instagram w-16 h-16 rounded-full flex items-center justify-center transition-all">
+                    <i class="fab fa-instagram text-3xl text-instagram"></i>
+                </a>
+                <a href="#" class="social-icon bg-facebook/20 hover:bg-facebook w-16 h-16 rounded-full flex items-center justify-center transition-all">
+                    <i class="fab fa-facebook-f text-3xl text-facebook"></i>
+                </a>
+                <a href="#" class="social-icon bg-discord/20 hover:bg-discord w-16 h-16 rounded-full flex items-center justify-center transition-all">
+                    <i class="fab fa-discord text-3xl text-discord"></i>
+                </a>
+            </div>
+            
+            <div class="mt-8 text-center text-gray-400">
+                <p><i class="fas fa-phone-alt text-minecraft ml-2"></i> رقم الواتساب: +964 XXX XXX XXX</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= سلة المشتريات الجديدة ============= -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="p-5 border-b border-minecraft/20 flex justify-between items-center">
+            <h2 class="text-2xl font-bold"><i class="fas fa-shopping-cart text-minecraft ml-2"></i>سلة المشتريات</h2>
+            <button id="closeCartBtn" class="text-2xl hover:text-minecraft transition">&times;</button>
+        </div>
+        
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-5">
+            <p class="text-center text-gray-400">السلة فارغة</p>
+        </div>
+        
+        <div class="p-5 border-t border-minecraft/20">
+            <div class="bg-minecraft/10 rounded-2xl p-4 mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-400">عدد المنتجات:</span>
+                    <span id="cartTotalItems" class="font-bold">0</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-400">المجموع الكلي:</span>
+                    <span id="cartTotalPrice" class="text-2xl font-bold text-minecraft">0 IQD</span>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="clearCartBtn" class="flex-1 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white py-3 rounded-xl transition font-bold">
+                    <i class="fas fa-trash ml-1"></i> تفريغ
+                </button>
+                <button id="checkoutBtn" class="flex-1 btn-minecraft py-3 rounded-xl text-white font-bold transition">
+                    <i class="fas fa-check-circle ml-1"></i> إنهاء الطلب
+                </button>
+            </div>
+            
+            <div class="mt-4 text-center text-xs text-gray-500">
+                <i class="fas fa-shield-alt text-minecraft"></i> الدفع عند الاستلام متوفر
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black/90 border-t border-minecraft/20 py-8 text-center text-gray-500 text-sm">
+        <p>© 2025 Gaming Vault Iraq - جميع الكودات رقمية فورية | الدفع عند الاستلام متوفر</p>
+        <div class="flex justify-center gap-4 mt-3">
+            <i class="fab fa-whatsapp hover:text-whatsapp transition cursor-pointer"></i>
+            <i class="fab fa-telegram hover:text-telegram transition cursor-pointer"></i>
+            <i class="fab fa-instagram hover:text-instagram transition cursor-pointer"></i>
+            <i class="fab fa-facebook hover:text-facebook transition cursor-pointer"></i>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        
+        // ============= سعر الصرف الجديد =============
+        // 1 دولار = 2000 دينار عراقي
+        const USD_TO_IQD = 2000;
+        const SAR_TO_IQD = 533.33; // 1 ريال = 533.33 دينار (2000/3.75)
+        
+        // ============= منتجات ماين كرافت =============
+        const minecraftProducts = [
+            { id: 1, name: "🎮 ريلم 3 أشخاص", desc: "Realm 3 Players - 30 يوم", priceUSD: 2, priceIQD: 4000, priceSAR: 10.6, icon: "fa-users", badge: "الأكثر مبيعاً" },
+            { id: 2, name: "🎮 ريلم 10 أشخاص", desc: "Realm 10 Players - 30 يوم", priceUSD: 2.5, priceIQD: 5000, priceSAR: 13.3, icon: "fa-users", badge: "عرض خاص" },
+            { id: 3, name: "💎 كوينز 1860", desc: "Minecoins 1860", priceUSD: 3.5, priceIQD: 7000, priceSAR: 18.6, icon: "fa-gem", badge: "" },
+            { id: 4, name: "💎 كوينز 2,480", desc: "Minecoins 2480", priceUSD: 4.5, priceIQD: 9000, priceSAR: 24, icon: "fa-gem", badge: "أفضل قيمة" },
+            { id: 5, name: "💎 كوينز 3,410", desc: "Minecoins 3410", priceUSD: 5, priceIQD: 10000, priceSAR: 26.6, icon: "fa-gem", badge: "" },
+            { id: 6, name: "🖥️ ماين كرافت جافا + بيدروك", desc: "Minecraft Java + Bedrock Edition - كود رقمي عالمي", priceUSD: 15, priceIQD: 30000, priceSAR: 80, icon: "fa-cube", badge: "قمة المبيعات" },
+            { id: 7, name: "💰 ماين كوينز 3500", desc: "Minecoins 3500 Global", priceUSD: 12.5, priceIQD: 25000, priceSAR: 66.6, icon: "fa-coins", badge: "عرض الأسبوع" }
+        ];
+        
+        // ============= بطاقات اكس بوكس (بسعر 2000 دينار للدولار) =============
+        const xboxCards = [
+            { value: 5, priceUSD: 5, priceIQD: 10000, priceSAR: 26.6 },
+            { value: 10, priceUSD: 10, priceIQD: 20000, priceSAR: 53.3 },
+            { value: 15, priceUSD: 15, priceIQD: 30000, priceSAR: 80 },
+            { value: 20, priceUSD: 20, priceIQD: 40000, priceSAR: 106.6 },
+            { value: 25, priceUSD: 25, priceIQD: 50000, priceSAR: 133.3 },
+            { value: 30, priceUSD: 30, priceIQD: 60000, priceSAR: 160 },
+            { value: 40, priceUSD: 40, priceIQD: 80000, priceSAR: 213.3 },
+            { value: 50, priceUSD: 50, priceIQD: 100000, priceSAR: 266.6 },
+            { value: 60, priceUSD: 60, priceIQD: 120000, priceSAR: 320 },
+            { value: 75, priceUSD: 75, priceIQD: 150000, priceSAR: 400 },
+            { value: 100, priceUSD: 100, priceIQD: 200000, priceSAR: 533.3 }
+        ];
+        
+        // ============= منتجات ديسكورد =============
+        const discordProducts = [
+            { id: 8, name: "💜 Discord Nitro 3 شهور", desc: "Discord Nitro Global - 3 Months", priceUSD: 2.5, priceIQD: 5000, priceSAR: 13.3, icon: "fa-discord", badge: "عرض خاص" }
+        ];
+        
+        // سلة المشتريات
+        let cart = JSON.parse(localStorage.getItem('gameCart')) || [];
+        
+        // عرض منتجات ماين كرافت
+        function renderMinecraft() {
+            const container = document.getElementById('minecraftGrid');
+            container.innerHTML = minecraftProducts.map(p => `
+                <div class="game-card minecraft-card cursor-pointer">
+                    <div class="p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fas ${p.icon} text-3xl text-minecraft"></i>
+                            <div>
+                                <h3 class="font-bold text-lg">${p.name}</h3>
+                                ${p.badge ? `<span class="text-xs text-minecraft">${p.badge}</span>` : ''}
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">${p.desc}</p>
+                        <div class="bg-black/30 rounded-xl p-3 mb-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-minecraft font-bold"><i class="fas fa-dinar-sign"></i> ${p.priceIQD.toLocaleString()} IQD</span>
+                                <span class="text-cyan-400 text-sm"><i class="fas fa-dollar-sign"></i> $${p.priceUSD}</span>
+                                <span class="text-yellow-500 text-sm"><i class="fas fa-riyal-sign"></i> ${p.priceSAR} SAR</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart(${p.id}, 'minecraft')" class="btn-minecraft w-full py-2 rounded-full text-white font-bold transition">
+                            <i class="fas fa-cart-plus ml-1"></i> إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // عرض بطاقات اكس بوكس
+        function renderXbox() {
+            const container = document.getElementById('xboxGrid');
+            container.innerHTML = xboxCards.map(card => `
+                <div class="game-card xbox-card cursor-pointer">
+                    <div class="p-5 text-center">
+                        <i class="fab fa-xbox text-5xl text-xbox mb-3"></i>
+                        <h3 class="text-2xl font-bold">$${card.value}</h3>
+                        <p class="text-gray-400 text-sm mb-3">بطاقة اكس بوكس عالمية</p>
+                        <div class="bg-black/30 rounded-xl p-3 mb-4">
+                            <div class="text-minecraft font-bold text-lg">${card.priceIQD.toLocaleString()} IQD</div>
+                            <div class="flex justify-center gap-3 text-xs mt-1">
+                                <span class="text-cyan-400">≈ $${card.priceUSD}</span>
+                                <span class="text-yellow-500">≈ ${card.priceSAR} SAR</span>
+                            </div>
+                        </div>
+                        <button onclick="addXboxToCart(${card.value})" class="btn-xbox w-full py-2 rounded-full text-white font-bold transition">
+                            <i class="fas fa-cart-plus ml-1"></i> إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // عرض منتجات ديسكورد
+        function renderDiscord() {
+            const container = document.getElementById('discordGrid');
+            container.innerHTML = discordProducts.map(p => `
+                <div class="game-card discord-card cursor-pointer">
+                    <div class="p-5 text-center">
+                        <i class="fab fa-discord text-5xl text-discord mb-3"></i>
+                        <h3 class="font-bold text-lg">${p.name}</h3>
+                        <p class="text-gray-400 text-sm mb-3">${p.desc}</p>
+                        <div class="bg-black/30 rounded-xl p-3 mb-4">
+                            <div class="text-minecraft font-bold">${p.priceIQD.toLocaleString()} IQD</div>
+                            <div class="flex justify-center gap-3 text-xs mt-1">
+                                <span class="text-cyan-400">$${p.priceUSD}</span>
+                                <span class="text-yellow-500">${p.priceSAR} SAR</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart(${p.id}, 'discord')" class="btn-discord w-full py-2 rounded-full text-white font-bold transition">
+                            <i class="fas fa-cart-plus ml-1"></i> إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // إضافة منتج للسلة
+        window.addToCart = function(id, type) {
+            let product;
+            if (type === 'minecraft') product = minecraftProducts.find(p => p.id === id);
+            else product = discordProducts.find(p => p.id === id);
+            
+            const existing = cart.find(item => item.id === id && item.type === type);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...product, type, quantity: 1 });
+            }
+            updateCartUI();
+            updateCartSidebar();
+            showNotification('تم إضافة المنتج إلى السلة');
+        };
+        
+        // إضافة بطاقة اكس بوكس للسلة
+        window.addXboxToCart = function(value) {
+            const card = xboxCards.find(c => c.value === value);
+            const product = {
+                id: `xbox_${value}`,
+                name: `Xbox Gift Card $${value}`,
+                priceUSD: card.priceUSD,
+                priceIQD: card.priceIQD,
+                priceSAR: card.priceSAR,
+                type: 'xbox',
+                quantity: 1
+            };
+            
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) existing.quantity++;
+            else cart.push(product);
+            
+            updateCartUI();
+            updateCartSidebar();
+            showNotification('تم إضافة البطاقة إلى السلة');
+        };
+        
+        // تحديث واجهة السلة
+        function updateCartSidebar() {
+            const container = document.getElementById('cartItemsList');
+            const totalItemsSpan = document.getElementById('cartTotalItems');
+            const totalPriceSpan = document.getElementById('cartTotalPrice');
+            
+            let totalItems = 0;
+            let totalPrice = 0;
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-10"><i class="fas fa-shopping-cart text-5xl text-gray-500 mb-3"></i><p class="text-gray-400">السلة فارغة</p><p class="text-xs text-gray-500 mt-2">أضف منتجات لتظهر هنا</p></div>';
+                totalItemsSpan.innerText = '0';
+                totalPriceSpan.innerText = '0 IQD';
+                return;
+            }
+            
+            container.innerHTML = cart.map((item, index) => {
+                totalItems += item.quantity;
+                totalPrice += item.priceIQD * item.quantity;
+                return `
+                    <div class="cart-item">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-bold">${item.name}</h4>
+                                <p class="text-xs text-gray-400">${item.priceIQD.toLocaleString()} IQD/قطعة</p>
+                            </div>
+                            <button onclick="removeItem(${index})" class="text-red-400 hover:text-red-300">&times;</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="quantity-btn minus" onclick="changeQuantity(${index}, -1)">-</div>
+                                <span class="font-bold w-8 text-center">${item.quantity}</span>
+                                <div class="quantity-btn plus" onclick="changeQuantity(${index}, 1)">+</div>
+                            </div>
+                            <span class="text-minecraft font-bold">${(item.priceIQD * item.quantity).toLocaleString()} IQD</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            totalItemsSpan.innerText = totalItems;
+            totalPriceSpan.innerText = totalPrice.toLocaleString() + ' IQD';
+            document.getElementById('cartCount').innerText = totalItems;
+            
+            localStorage.setItem('gameCart', JSON.stringify(cart));
+        }
+        
+        // تغيير الكمية
+        window.changeQuantity = function(index, delta) {
+            const newQuantity = cart[index].quantity + delta;
+            if (newQuantity <= 0) {
+                cart.splice(index, 1);
+            } else {
+                cart[index].quantity = newQuantity;
+            }
+            updateCartSidebar();
+        };
+        
+        // إزالة منتج
+        window.removeItem = function(index) {
+            cart.splice(index, 1);
+            updateCartSidebar();
+            showNotification('تم إزالة المنتج من السلة');
+        };
+        
+        // تفريغ السلة
+        document.getElementById('clearCartBtn').addEventListener('click', () => {
+            if (cart.length > 0 && confirm('هل أنت متأكد من تفريغ السلة؟')) {
+                cart = [];
+                updateCartSidebar();
+                showNotification('تم تفريغ السلة');
+            }
+        });
+        
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+            localStorage.setItem('gameCart', JSON.stringify(cart));
+        }
+        
+        function showNotification(msg) {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-5 right-5 bg-minecraft text-black px-6 py-3 rounded-full font-bold z-[1100] animate-bounce';
+            notif.innerHTML = `<i class="fas fa-check-circle ml-2"></i>${msg}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 2000);
+        }
+        
+        // إنهاء الطلب
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('السلة فارغة!');
+                return;
+            }
+            
+            const totalIQD = cart.reduce((sum, item) => sum + (item.priceIQD * item.quantity), 0);
+            
+            let orderMsg = '🛒 طلب جديد من Gaming Vault\n\n';
+            orderMsg += '━━━━━━━━━━━━━━━━━━\n';
+            cart.forEach(item => {
+                orderMsg += `📦 ${item.name}\n`;
+                orderMsg += `   × ${item.quantity} = ${(item.priceIQD * item.quantity).toLocaleString()} IQD\n`;
+            });
+            orderMsg += '━━━━━━━━━━━━━━━━━━\n';
+            orderMsg += `💰 المجموع: ${totalIQD.toLocaleString()} IQD\n`;
+            orderMsg += `💵 بالدولار: $${(totalIQD / USD_TO_IQD).toFixed(2)}\n`;
+            orderMsg += `💶 بالريال: ${(totalIQD / SAR_TO_IQD).toFixed(2)} SAR\n`;
+            orderMsg += '━━━━━━━━━━━━━━━━━━\n';
+            orderMsg += '📞 للتواصل: ارسل هذا الطلب على واتساب\n';
+            orderMsg += '✅ كودات فورية - الدفع عند الاستلام';
+            
+            const whatsappNumber = "964XXXXXXXXX"; // ضع رقم الواتساب هنا
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderMsg)}`;
+            
+            if (confirm(`المجموع الكلي: ${totalIQD.toLocaleString()} IQD\n\nاضغط موافق لإرسال الطلب عبر واتساب`)) {
+                window.open(whatsappUrl, '_blank');
+                cart = [];
+                updateCartSidebar();
+                showNotification('تم إرسال الطلب! سيتم التواصل معك');
+            }
+        }
+        
+        document.getElementById('checkoutBtn').addEventListener('click', checkout);
+        
+        // السلة الجانبية
+        const cartSidebar = document.getElementById('cartSidebar');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const openCartBtn = document.getElementById('openCartBtn');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        
+        openCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.add('open');
+            cartOverlay.classList.add('active');
+            updateCartSidebar();
+        });
+        
+        closeCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            cartOverlay.classList.remove('active');
+        });
+        
+        cartOverlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            cartOverlay.classList.remove('active');
+        });
+        
+        // الثيم
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        themeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('dark')) {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.remove('dark');
+            document.body.classList.add('light');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // تشغيل العرض
+        renderMinecraft();
+        renderXbox();
+        renderDiscord();
+        updateCartSidebar();
+    </script>
+</body>
+</html>
